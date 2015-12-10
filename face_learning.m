@@ -48,12 +48,19 @@ for f = 1:NB_FACES
         fname = sprintf('%s/%d.png',face_path,fi);
         img = imread(fname);
         [h,w] = size(img);
-        %%Code rempli par Steven Klinger
         n_blocks = 0;
         
-        
-%% CUT HERE ====================================================================
-%% CUT HERE ====================================================================
+        for i= 1:2:(h-3)
+            for j= 1:2:(w-3)
+            n_blocks = n_blocks+1;
+            b = im(i:(i+3),j:(j+3));
+            bdct = dct2(b);
+            
+            AC_list{f,fi}{b} = dct2(2:16);
+            dc(b) = dct2(1);
+            end
+        end
+    dc_mean(f.fi) = mean(dc);
     end
 end
 DC_MEAN_ALL = mean2(dc_means);
@@ -77,9 +84,7 @@ G_Patterns = [];
 for f = 1:NB_FACES
     for fi = 1:NB_IMAGES
         % normalisation et quantification des AC
-%% CUT HERE ====================================================================
-%% CUT HERE ====================================================================
-        
+        G_pattern(p,:) = round(AC_list{f,fi}{b}/dc_all*dc_mean/QP);
         % identification des motifs et comptage de leurs occurrences.
 				% QAC est la matrice des vecteurs AC quantifés
         for i = 1:size(QAC,1)
