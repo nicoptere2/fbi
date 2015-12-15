@@ -60,7 +60,7 @@ for f = 1:NB_FACES
             dc(b) = dct2(1);
             end
         end
-    dc_mean(f.fi) = mean(dc);
+       dc_mean(f,fi) = mean(dc);
     end
 end
 DC_MEAN_ALL = mean2(dc_means);
@@ -84,12 +84,12 @@ G_Patterns = [];
 for f = 1:NB_FACES
     for fi = 1:NB_IMAGES
         % normalisation et quantification des AC
-        G_pattern(p,:) = round(AC_list{f,fi}{b}/dc_all*dc_mean/QP);
+        %Faire le ROUND ici !
+        qac = round(AC_list{f,fi}{b}/dc_all*dc_mean(f,fi)/QP);
         % identification des motifs et comptage de leurs occurrences.
 				% QAC est la matrice des vecteurs AC quantifés
         for i = 1:size(QAC,1)
-%% CUT HERE ====================================================================
-%% CUT HERE ====================================================================
+        
         end
     end
 end
