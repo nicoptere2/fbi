@@ -60,7 +60,7 @@ for f = 1:NB_FACES
             dc(b) = dct2(1);
             end
         end
-       dc_mean(f,fi) = mean(dc);
+    dc_mean(f,fi) = mean(dc);
     end
 end
 DC_MEAN_ALL = mean2(dc_means);
@@ -84,12 +84,32 @@ G_Patterns = [];
 for f = 1:NB_FACES
     for fi = 1:NB_IMAGES
         % normalisation et quantification des AC
-        %Faire le ROUND ici !
-        qac = round(AC_list{f,fi}{b}/dc_all*dc_mean(f,fi)/QP);
+        h = size(AC_list(f,fi),1);
+        ac = AC_list(f,fi);
+        QAC = zeros(h, 15);
+        for i = 1:h
+                a = ac(i, :) * DC_MEAN_ALL;
+                b = a / dc_means(f,fi) / QP;
+                r = round(b);
+                QAC(i, :) = r;
+        end
         % identification des motifs et comptage de leurs occurrences.
 				% QAC est la matrice des vecteurs AC quantifés
         for i = 1:size(QAC,1)
-        
+            
+            if f==1 && fi==1
+                G_Patterns(1,1:15) = QAC(1,1:15);
+                G_Patterns(1,16) = 1;
+            else
+                [~,ind] = ismember(QAC(i,1:15),G_Patterns(:,1:15), 'rows');
+                if ind > 0
+                    G_Patterns(ind, 16) = G_Patters(ind, 16)+1;
+                else
+                    ind = size(G_Patterns, 1)+1;
+                    G_Patterns(ind, 1:15) = QAC(i, 1:15);
+                    G_Patterns(ind, 15+i) = 1;
+                end
+            end
         end
     end
 end
@@ -104,10 +124,14 @@ disp('G_Patterns done')
 
 %% Construction des histogrammes de toutes les images de chaque visage
 AC_Patterns_Histo = zeros(N_AC_PATTERNS,1);
+AC_Patterns_Histo_List = cell(NB_FACES, NB_IMAGES);
 for f = 1:NB_FACES
     for fi = 1:NB_IMAGES
-%% CUT HERE ====================================================================
-%% CUT HERE ====================================================================
+        %%FAIRE FONCTION FIND PATTERN NICOLAS !
+        AC_Patterns_Histo(i) = find_Pattern(G_Patterns(i, 1:15), AC_list(f,fi)(:, 1:15));
     end
+    AC_Patterns_Histo_Listif(f,fi) = AC_Patterns_Histo;
+    
 end
+save('Histogrammes.mat', 'AC_Patterns_Histo_List');
 disp('AC_Patterns_Histo done');
