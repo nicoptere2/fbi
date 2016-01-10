@@ -20,7 +20,7 @@ load('params.mat'); % params est une structure (cf. face_learning)
  NB_FACES = params.NB_FACES;
  NB_IMAGES = params.NB_IMAGES;
  DC_MEAN_ALL = params.DC_MEAN_ALL;
- DIR = params.db_path);
+ DIR = params.db_path;
 %% extraction des blocs DCT
 
         img = imread(img);
@@ -33,7 +33,7 @@ load('params.mat'); % params est une structure (cf. face_learning)
             b = im(i:(i+3),j:(j+3));
             bdct = dct2(b);
             
-            AC_list{b} = dct2(2:16);
+            AC_list{b} = dct2(1:16);
             dc(b) = dct2(1);
             end
         end
@@ -45,8 +45,7 @@ h = size(AC_list,1);
         for i = 1:h
                 a = AC_list(i, :) * DC_MEAN_ALL;
                 b = a / dc_means / QP;
-                r = round(b);
-                QAC(i, :) = r;
+                QAC(i, :) = round(b);
         end
         
 %% Comptage des occurrences des motifs globaux
@@ -59,11 +58,12 @@ end
 %% Sélection des KPP meilleures AC_Patterns_Histo par PVH
 best = ones(KPP+1,3)*-1; % chaque ligne est <SAD,N°individu,N°profil>
 %% CUT HERE ====================================================================
+
 %% CUT HERE ====================================================================
 best = best(1:(end-1),2:end);
 
 %% visualisation des visages possiblement identifiés
-if( visu)
+if(visu)
     figure;
     subplot(1,KPP+1,1);
     imshow(img);

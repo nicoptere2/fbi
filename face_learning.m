@@ -53,7 +53,7 @@ for f = 1:NB_FACES
         for i= 1:2:(h-3)
             for j= 1:2:(w-3)
             n_blocks = n_blocks+1;
-            b = im(i:(i+3),j:(j+3));
+            b = img(i:(i+3),j:(j+3));
             bdct = dct2(b);
             
             AC_list{f,fi}{b} = dct2(2:16);
@@ -127,11 +127,13 @@ AC_Patterns_Histo = zeros(N_AC_PATTERNS,1);
 AC_Patterns_Histo_List = cell(NB_FACES, NB_IMAGES);
 for f = 1:NB_FACES
     for fi = 1:NB_IMAGES
-        %%FAIRE FONCTION FIND PATTERN NICOLAS !
-        AC_Patterns_Histo(i) = find_Pattern(G_Patterns(i, 1:15), AC_list(f,fi)(:, 1:15));
+        %%FAIRE FONCTION FIND PATTERN
+        AC_Patterns_Histo(i) = find_Pattern(G_Patterns(i, 1:16), AC_list(f,fi)(:, 1:16));
     end
     AC_Patterns_Histo_Listif(f,fi) = AC_Patterns_Histo;
     
 end
 save('Histogrammes.mat', 'AC_Patterns_Histo_List');
 disp('AC_Patterns_Histo done');
+
+
